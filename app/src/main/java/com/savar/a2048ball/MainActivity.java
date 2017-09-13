@@ -1,20 +1,24 @@
 package com.savar.a2048ball;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener2;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -42,14 +46,78 @@ public class MainActivity extends Activity implements SensorEventListener2
 
     private boolean flag=false;
 
+    LinearLayout screen;
+    Handler handler = new Handler();
+    int R1=255;
+    int G1=255;
+    int B1=255;
+    int R2=0;
+    int G2=0;
+    int B2=0;
+    int flaggg;
+    Random rand=new Random();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        BallView ballView = new BallView(this);
+        final BallView ballView = new BallView(this);
+        ballView.setBackgroundResource(R.color.colorBallView);
         setContentView(ballView);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        R1=rand.nextInt((255 - 0) + 1) + 0;
+        G1=rand.nextInt((255 - 0) + 1) + 0;
+        B1=rand.nextInt((255 - 0) + 1) + 0;
+        R2=rand.nextInt((255 - 0) + 1) + 0;
+        G2=rand.nextInt((255 - 0) + 1) + 0;
+        B2=rand.nextInt((255 - 0) + 1) + 0;
+
+        (new Thread()
+        {
+            @Override
+            public void run()
+            {
+                while (true)
+                {
+                    handler.post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            ObjectAnimator colorFade = ObjectAnimator.ofObject(ballView, "backgroundColor", new ArgbEvaluator(), Color.argb(255, R1, G1, B1), Color.argb(255, R2, G2, B2));
+                            colorFade.setDuration(7000);
+                            colorFade.start();
+                        }
+                    });
+                    // next will pause the thread for some time
+                    try
+                    {
+                        sleep(10000);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        break;
+                    }
+                    flaggg=R1;
+                    R1=R2;
+                    R2=flaggg;
+
+                    flaggg=G1;
+                    G1=G2;
+                    G2=flaggg;
+
+                    flaggg=B1;
+                    B1=B2;
+                    B2=flaggg;
+
+                    R2=rand.nextInt((255 - 0) + 1) + 0;
+                    G2=rand.nextInt((255 - 0) + 1) + 0;
+                    B2=rand.nextInt((255 - 0) + 1) + 0;
+                }
+            }
+        }).start();
 
         Point size = new Point();
         Display display = getWindowManager().getDefaultDisplay();
@@ -199,6 +267,7 @@ public class MainActivity extends Activity implements SensorEventListener2
 
     public void Collision(int i)
     {
+        boolean flagCollosion=true;
         for (int x=0;x<xPos.size();x++)
             if (x!=i && i<xPos.size())
             {
@@ -207,14 +276,18 @@ public class MainActivity extends Activity implements SensorEventListener2
                 float distanceSquared = (xDif * xDif) + (yDif * yDif);
                 boolean collosion = distanceSquared < (radius.get(i) + radius.get(x)) * (radius.get(i) + radius.get(x));
 
-                if(collosion && type.get(i) != type.get(x))
+                // وقتی دو توپ غیر هم امتیاز به هم برخورد می کنند
+                if(collosion && type.get(i) != type.get(x) && flagCollosion)
                 {
+                    flagCollosion=false;
                     xPos.set(i, xPos.get(i) + xS);
                     yPos.set(i, yPos.get(i) + yS);
 
                     xVel.set(i, 0.0f);
                     yVel.set(i, 0.0f);
                 }
+
+                // وقتی دو توپ هم امتیاز به هم برخورد می کنند
                 if (collosion && type.get(i).compareTo(type.get(x))==0)
                 {
                     if (type.get(i)==2)
@@ -294,11 +367,10 @@ public class MainActivity extends Activity implements SensorEventListener2
 
                                         if (collosion2)
                                         {
-
+                                            
                                         }
                                     }
 
-                                    // شانسی :|
                                     int count1=0;
                                     int count2=0;
                                     for (int num = (int) (xPos.get(w)-radius.get(w)+n-1); num<=xPos.get(w)+radius.get(w)-n+1; num++)
