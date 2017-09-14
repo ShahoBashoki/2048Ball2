@@ -70,6 +70,7 @@ public class BallView extends View
                 canvas.drawCircle(MainActivity.xPos.get(x), MainActivity.yPos.get(x), MainActivity.radius.get(x), paint);
                 paint.setColor(Color.WHITE);
                 canvas.drawText(MainActivity.type.get(x) + "", MainActivity.xPos.get(x), MainActivity.yPos.get(x), paint);
+                invalidate();
 //            }
         }
         invalidate();

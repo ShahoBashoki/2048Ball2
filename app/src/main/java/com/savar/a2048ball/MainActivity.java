@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,8 @@ import java.util.Random;
 
 public class MainActivity extends Activity implements SensorEventListener2
 {
+    private int score=0;
+
     public static ArrayList<Float> xPos=new ArrayList<Float>();
     private ArrayList<Float> xVel=new ArrayList<Float>();
     public static ArrayList<Float> yPos=new ArrayList<Float>();
@@ -47,6 +50,7 @@ public class MainActivity extends Activity implements SensorEventListener2
     private boolean flag=false;
 
     LinearLayout screen;
+    public static TextView txt;
     Handler handler = new Handler();
     int R1=255;
     int G1=255;
@@ -63,9 +67,16 @@ public class MainActivity extends Activity implements SensorEventListener2
         super.onCreate(savedInstanceState);
         final BallView ballView = new BallView(this);
         ballView.setBackgroundResource(R.color.colorBallView);
-        setContentView(ballView);
+        setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        screen=(LinearLayout) findViewById(R.id.screen);
+        txt=(TextView) findViewById(R.id.txt);
+        screen.setBackgroundColor(Color.BLUE);
+        txt.setText("shaho");
+        screen.addView(ballView);
+//        ballView.bringToFront();
 
         R1=rand.nextInt((255 - 0) + 1) + 0;
         G1=rand.nextInt((255 - 0) + 1) + 0;
@@ -86,7 +97,7 @@ public class MainActivity extends Activity implements SensorEventListener2
                         @Override
                         public void run()
                         {
-                            ObjectAnimator colorFade = ObjectAnimator.ofObject(ballView, "backgroundColor", new ArgbEvaluator(), Color.argb(255, R1, G1, B1), Color.argb(255, R2, G2, B2));
+                            ObjectAnimator colorFade = ObjectAnimator.ofObject(ballView, "backgroundColor", new ArgbEvaluator(), Color.argb(0, R1, G1, B1), Color.argb(0, R2, G2, B2));
                             colorFade.setDuration(7000);
                             colorFade.start();
                         }
@@ -290,6 +301,8 @@ public class MainActivity extends Activity implements SensorEventListener2
                 // وقتی دو توپ هم امتیاز به هم برخورد می کنند
                 if (collosion && type.get(i).compareTo(type.get(x))==0)
                 {
+                    score=score+(type.get(i)*2);
+
                     if (type.get(i)==2)
                         flag=true;
 
