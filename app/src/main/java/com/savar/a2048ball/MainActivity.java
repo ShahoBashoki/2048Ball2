@@ -76,7 +76,7 @@ public class MainActivity extends Activity implements SensorEventListener2
         screen.setBackgroundColor(Color.BLUE);
         txt.setText("shaho");
 
-       // ballView.setBackgroundColor(Color.GREEN);
+        ballView.setBackgroundColor(Color.argb(0,0,0,0));
         ballView.setX(0);
         ballView.setY(0);
 
@@ -103,9 +103,10 @@ public class MainActivity extends Activity implements SensorEventListener2
                         @Override
                         public void run()
                         {
-                            ObjectAnimator colorFade = ObjectAnimator.ofObject(ballView, "backgroundColor", new ArgbEvaluator(), Color.argb(0, R1, G1, B1), Color.argb(0, R2, G2, B2));
-                            colorFade.setDuration(7000);
-                            colorFade.start();
+                            //ObjectAnimator colorFade = ObjectAnimator.ofObject(ballView, "backgroundColor", new ArgbEvaluator(), Color.argb(0, R1, G1, B1), Color.argb(0, R2, G2, B2));
+                            //colorFade.setDuration(7000);
+                            //colorFade.start();
+
                         }
                     });
                     // next will pause the thread for some time
