@@ -26,7 +26,7 @@ import java.util.Random;
 
 public class MainActivity extends Activity implements SensorEventListener2
 {
-    public static int score=0;
+    private int score=0;
 
     public static ArrayList<Float> xPos=new ArrayList<Float>();
     private ArrayList<Float> xVel=new ArrayList<Float>();
@@ -65,7 +65,7 @@ public class MainActivity extends Activity implements SensorEventListener2
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        BallView ballView = new BallView(this);
+        final BallView ballView = new BallView(this);
         ballView.setBackgroundResource(R.color.colorBallView);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -73,7 +73,16 @@ public class MainActivity extends Activity implements SensorEventListener2
 
         screen=(RelativeLayout) findViewById(R.id.screen);
         txt=(TextView) findViewById(R.id.txt);
+        screen.setBackgroundColor(Color.BLUE);
+        txt.setText("shaho");
+
+       // ballView.setBackgroundColor(Color.GREEN);
+        ballView.setX(0);
+        ballView.setY(0);
+
         screen.addView(ballView);
+
+//        ballView.bringToFront();
 
         R1=rand.nextInt((255 - 0) + 1) + 0;
         G1=rand.nextInt((255 - 0) + 1) + 0;
@@ -142,6 +151,7 @@ public class MainActivity extends Activity implements SensorEventListener2
             double a=Math.pow(n-xRandom,2);
             double r=2500.0;
             double b=Math.sqrt(r-a);
+            Log.i("shaho",xRandom+"///"+yRandom+"///"+a+"///"+n+"///////"+b);
             for (int u = (int) (yRandom-b); u<=yRandom+b; u++)
                 Location[n][u]=1;
         }
@@ -175,6 +185,7 @@ public class MainActivity extends Activity implements SensorEventListener2
             double a=Math.pow(n-xRandom,2);
             double r=2500.0;
             double b=Math.sqrt(r-a);
+            Log.i("shaho",n+"///////"+b);
             for (int u = (int) (yRandom-b);u<=yRandom+b;u++)
                 Location[n][u]=1;
         }
