@@ -75,6 +75,10 @@ public class MainActivity extends Activity implements SensorEventListener2
         screen.setBackgroundColor(Color.BLUE);
         txt.setText("shaho");
         screen.addView(ballView);
+        ballView.setBackgroundColor(Color.GREEN);
+        ballView.setX(0);
+        ballView.setY(0);
+
 //        ballView.bringToFront();
 
         R1=rand.nextInt((255 - 0) + 1) + 0;
