@@ -5,4 +5,8 @@
     <color name="colorAccent">#50514F</color>
     <color name="windowBackground">#ffffff</color>
     <color name="colorBallView">#00ffffff</color>
+    <color name="SoundsBackgroundColorLanguage">#1976d2</color>
+    <color name="HowToPlayAbout2048Ball">#00796b</color>
+    <color name="TimeTrial">#afb42b</color>
+    <color name="ClassicPlay">#ffeb3b</color>
 </resources>

@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">2048 Ball</string>
+    <string name="ClassicPlay">Classic play</string>
+    <string name="TimeTrial">Time trial</string>
+    <string name="About2048Ball">About 2048 Ball</string>
+    <string name="HowToPlay">How to play</string>
+    <string name="Sounds">Sounds</string>
+    <string name="BackgroundColor">Background color</string>
+    <string name="Language">Language</string>
 </resources>
