@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class MainActivity extends Activity implements SensorEventListener2
 
     private boolean flag=false;
 
-    LinearLayout screen;
+    RelativeLayout screen;
     public static TextView txt;
     Handler handler = new Handler();
     int R1=255;
@@ -70,14 +71,16 @@ public class MainActivity extends Activity implements SensorEventListener2
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        screen=(LinearLayout) findViewById(R.id.screen);
+        screen=(RelativeLayout) findViewById(R.id.screen);
         txt=(TextView) findViewById(R.id.txt);
         screen.setBackgroundColor(Color.BLUE);
         txt.setText("shaho");
-        screen.addView(ballView);
-        ballView.setBackgroundColor(Color.GREEN);
+
+       // ballView.setBackgroundColor(Color.GREEN);
         ballView.setX(0);
         ballView.setY(0);
+
+        screen.addView(ballView);
 
 //        ballView.bringToFront();
 
