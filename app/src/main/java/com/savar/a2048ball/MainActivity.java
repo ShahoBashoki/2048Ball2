@@ -26,7 +26,7 @@ import java.util.Random;
 
 public class MainActivity extends Activity implements SensorEventListener2
 {
-    private int score=0;
+    public static int score=0;
 
     public static ArrayList<Float> xPos=new ArrayList<Float>();
     private ArrayList<Float> xVel=new ArrayList<Float>();
@@ -74,15 +74,7 @@ public class MainActivity extends Activity implements SensorEventListener2
         screen=(RelativeLayout) findViewById(R.id.screen);
         txt=(TextView) findViewById(R.id.txt);
         screen.setBackgroundColor(Color.BLUE);
-        txt.setText("shaho");
-
-       // ballView.setBackgroundColor(Color.GREEN);
-        ballView.setX(0);
-        ballView.setY(0);
-
         screen.addView(ballView);
-
-//        ballView.bringToFront();
 
         R1=rand.nextInt((255 - 0) + 1) + 0;
         G1=rand.nextInt((255 - 0) + 1) + 0;
