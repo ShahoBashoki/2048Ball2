@@ -1,6 +1,8 @@
 package com.savar.a2048ball;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,6 +18,8 @@ import android.widget.Toast;
 public class BallView extends View
 {
     private Paint paint;
+
+    SharedPreferences.Editor edit=MenuActivity.sharedPreferences.edit();
 //    private Canvas canvas2;
 //    Handler handler;
 //    Runnable runnable;
@@ -71,6 +75,13 @@ public class BallView extends View
                 paint.setColor(Color.WHITE);
                 canvas.drawText(MainActivity.type.get(x) + "", MainActivity.xPos.get(x), MainActivity.yPos.get(x), paint);
                 MainActivity.txt.setText(MainActivity.score+"");
+                if(MenuActivity.sharedPreferences.getInt("score",0)<MainActivity.score)
+                {
+                    MainActivity.imgBest.setImageResource(R.drawable.a);
+                    edit.putInt("score",MainActivity.score);
+                    edit.commit();
+                    MenuActivity.txtScoreBest.setText(MainActivity.score+"");
+                }
                 invalidate();
 //            }
         }

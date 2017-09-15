@@ -2,8 +2,10 @@ package com.savar.a2048ball;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -16,6 +18,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,6 +54,7 @@ public class MainActivity extends Activity implements SensorEventListener2
 
     RelativeLayout screen;
     public static TextView txt;
+    public static ImageView imgBest;
     Handler handler = new Handler();
     int R1=255;
     int G1=255;
@@ -75,6 +79,8 @@ public class MainActivity extends Activity implements SensorEventListener2
         txt=(TextView) findViewById(R.id.txt);
         screen.setBackgroundColor(Color.BLUE);
         screen.addView(ballView);
+
+        imgBest= (ImageView) findViewById(R.id.imgBest);
 
         R1=rand.nextInt((255 - 0) + 1) + 0;
         G1=rand.nextInt((255 - 0) + 1) + 0;
@@ -546,4 +552,14 @@ public class MainActivity extends Activity implements SensorEventListener2
             }
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+
+        Intent intent=new Intent(MainActivity.this,MenuActivity.class);
+        startActivity(intent);
+
+        MainActivity.this.finish();
+    }
 }// end of class

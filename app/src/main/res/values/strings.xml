@@ -7,4 +7,5 @@
     <string name="Sounds">Sounds</string>
     <string name="BackgroundColor">Background color</string>
     <string name="Language">Language</string>
+    <string name="highscore">2048 Ball</string>
 </resources>

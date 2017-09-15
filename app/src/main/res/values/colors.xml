@@ -9,4 +9,6 @@
     <color name="HowToPlayAbout2048Ball">#00796b</color>
     <color name="TimeTrial">#afb42b</color>
     <color name="ClassicPlay">#ffeb3b</color>
+    <color name="TextViewShadow">#7f000000</color>
+    <color name="ButtonShadow">#64000000</color>
 </resources>
