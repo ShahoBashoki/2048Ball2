@@ -2,10 +2,8 @@ package com.savar.a2048ball;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -19,7 +17,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class MainActivity extends Activity implements SensorEventListener2
+public class ClassicPlayActivity extends Activity implements SensorEventListener2
 {
     public static int score=0;
 
@@ -69,16 +66,16 @@ public class MainActivity extends Activity implements SensorEventListener2
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        final BallView ballView = new BallView(this);
-        ballView.setBackgroundResource(R.color.colorBallView);
-        setContentView(R.layout.activity_main);
+        final BallViewClassicPlay ballViewClassicPlay = new BallViewClassicPlay(this);
+        ballViewClassicPlay.setBackgroundResource(R.color.colorBallView);
+        setContentView(R.layout.activity_classic_play);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         screen=(RelativeLayout) findViewById(R.id.screen);
         txt=(TextView) findViewById(R.id.txt);
         screen.setBackgroundColor(Color.BLUE);
-        screen.addView(ballView);
+        screen.addView(ballViewClassicPlay);
 
         imgBest= (ImageView) findViewById(R.id.imgBest);
 
@@ -134,6 +131,7 @@ public class MainActivity extends Activity implements SensorEventListener2
             }
         }).start();
 
+        // get screen size
         Point size = new Point();
         Display display = getWindowManager().getDefaultDisplay();
         display.getSize(size);
@@ -442,15 +440,15 @@ public class MainActivity extends Activity implements SensorEventListener2
 //                            int count2=0;
 //                            for (int num = (int) (xPos.get(w)-radius.get(w)+n-1); num<=xPos.get(w)+radius.get(w)-n+1; num++)
 //                            {
-//                                double a=Math.pow(num-xPos.get(w),2);
+//                                double crown=Math.pow(num-xPos.get(w),2);
 //                                double r=Math.pow(radius.get(w),2);
-//                                double b=Math.sqrt(r-a);
-//                                Log.i("shaho",num+"///////"+b);
+//                                double information=Math.sqrt(r-crown);
+//                                Log.i("shaho",num+"///////"+information);
 //                                if (num<0)
 //                                    count1=n-1;
 //                                else if (num>xMax)
 //                                    count1=1-n;
-//                                for (int u = (int) (yPos.get(w)-b); u<=yPos.get(w)+b; u++)
+//                                for (int u = (int) (yPos.get(w)-information); u<=yPos.get(w)+information; u++)
 //                                {
 //                                    if (u<0)
 //                                        count2=n-1;
@@ -552,14 +550,4 @@ public class MainActivity extends Activity implements SensorEventListener2
             }
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        super.onBackPressed();
-
-        Intent intent=new Intent(MainActivity.this,MenuActivity.class);
-        startActivity(intent);
-
-        MainActivity.this.finish();
-    }
 }// end of class

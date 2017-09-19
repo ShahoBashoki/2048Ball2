@@ -15,7 +15,12 @@
 
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ClassicPlayActivity"
+            android:theme="@style/FullScreen">
+
+        </activity>
+        <activity
+            android:name=".TimeTrialActivity"
             android:theme="@style/FullScreen">
 
         </activity>

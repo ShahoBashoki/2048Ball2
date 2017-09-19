@@ -1,21 +1,13 @@
 package com.savar.a2048ball;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-public class BallView extends View
+public class BallViewTimeTrial extends View
 {
     private Paint paint;
 
@@ -26,7 +18,7 @@ public class BallView extends View
 
     //public static Handler handler=new Handler();
 
-    public BallView(Context context)
+    public BallViewTimeTrial(Context context)
     {
         super(context);
     }
@@ -39,14 +31,14 @@ public class BallView extends View
         paint.setStyle(Paint.Style.FILL);
         paint.setTextSize(50);
         paint.setTextAlign(Paint.Align.CENTER);
-        for (int x = 0; x < MainActivity.xPos.size(); x++)
+        for (int x = 0; x < TimeTrialActivity.xPos.size(); x++)
         {
-//            if (MainActivity.type.get(x)==2 && MainActivity.start.get(x)==1)
+//            if (ClassicPlayActivity.type.get(x)==2 && ClassicPlayActivity.start.get(x)==1)
 //            {
-//                MainActivity.start.set(x,0);
-//                final float xK=MainActivity.xPos.get(x);
-//                final float yK=MainActivity.yPos.get(x);
-//                for (int i = 1; i<=MainActivity.radius.get(x); i++)
+//                ClassicPlayActivity.start.set(x,0);
+//                final float xK=ClassicPlayActivity.xPos.get(x);
+//                final float yK=ClassicPlayActivity.yPos.get(x);
+//                for (int i = 1; i<=ClassicPlayActivity.radius.get(x); i++)
 //                {
 //                    final int finalX = x;
 //                    final int finalI = i;
@@ -70,19 +62,19 @@ public class BallView extends View
 //            }
 //            else
 //            {
-                paint.setARGB(180, 0, 0, 0);
-                canvas.drawCircle(MainActivity.xPos.get(x), MainActivity.yPos.get(x), MainActivity.radius.get(x), paint);
-                paint.setColor(Color.WHITE);
-                canvas.drawText(MainActivity.type.get(x) + "", MainActivity.xPos.get(x), MainActivity.yPos.get(x), paint);
-                MainActivity.txt.setText(MainActivity.score+"");
-                if(MenuActivity.sharedPreferences.getInt("score",0)<MainActivity.score)
-                {
-                    MainActivity.imgBest.setImageResource(R.drawable.a);
-                    edit.putInt("score",MainActivity.score);
-                    edit.commit();
-                    MenuActivity.txtScoreBest.setText(MainActivity.score+"");
-                }
-                invalidate();
+            paint.setARGB(180, 0, 0, 0);
+            canvas.drawCircle(TimeTrialActivity.xPos.get(x), TimeTrialActivity.yPos.get(x), TimeTrialActivity.radius.get(x), paint);
+            paint.setColor(Color.WHITE);
+            canvas.drawText(TimeTrialActivity.type.get(x) + "", TimeTrialActivity.xPos.get(x), TimeTrialActivity.yPos.get(x), paint);
+            TimeTrialActivity.txt.setText(TimeTrialActivity.score+"");
+            if(MenuActivity.sharedPreferences.getInt("scoreTimeTrial",0)< TimeTrialActivity.score)
+            {
+                TimeTrialActivity.imgBest.setImageResource(R.drawable.crown);
+                edit.putInt("scoreTimeTrial", TimeTrialActivity.score);
+                edit.commit();
+                MenuActivity.txtScoreBestClassicPlay.setText(TimeTrialActivity.score+"");
+            }
+            invalidate();
 //            }
         }
         invalidate();
