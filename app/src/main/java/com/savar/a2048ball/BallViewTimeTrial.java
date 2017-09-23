@@ -72,7 +72,7 @@ public class BallViewTimeTrial extends View
                 TimeTrialActivity.imgBest.setImageResource(R.drawable.crown);
                 edit.putInt("scoreTimeTrial", TimeTrialActivity.score);
                 edit.commit();
-                MenuActivity.txtScoreBestClassicPlay.setText(TimeTrialActivity.score+"");
+                MenuActivity.txtScoreBestTimeTrial.setText(TimeTrialActivity.score+"");
             }
             invalidate();
 //            }

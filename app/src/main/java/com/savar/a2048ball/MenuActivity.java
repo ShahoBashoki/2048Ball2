@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -12,7 +13,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
@@ -27,11 +32,21 @@ public class MenuActivity extends Activity {
     FloatingActionButton float_action_button_information;
 
     public static SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
     Dialog dialogSetting;
     Dialog dialogInformation;
+    private Effectstype effect;
+    NiftyDialogBuilder dialogBuilder;
 
-    boolean sounds=true;
     Button btnSounds;
+    Button btnBackgroundColor;
+    Button btnLanguage;
+
+    Button btnHowToPlay;
+    Button btnAbout2048Ball;
+
+    public static MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +55,7 @@ public class MenuActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MenuActivity.this);
+        editor=sharedPreferences.edit();
 
         txtScoreBestClassicPlay = (ShimmerTextView) findViewById(R.id.txtScoreBestClassicPlay);
         txtScoreBestClassicPlay.setText(sharedPreferences.getInt("scoreClassicPlay",0)+"");
@@ -51,15 +67,77 @@ public class MenuActivity extends Activity {
         shimmerTimeTrial = new Shimmer();
         shimmerTimeTrial.start(txtScoreBestTimeTrial);
 
+        dialogBuilder=NiftyDialogBuilder.getInstance(this);
+        effect=Effectstype.Newspager;
+
         ImageViewClassicPlay = (ImageView) findViewById(R.id.ImageViewClassicPlay);
         ImageViewClassicPlay.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                Intent intent = new Intent(MenuActivity.this, ClassicPlayActivity.class);
-                startActivity(intent);
-                MenuActivity.this.finish();
+                if (sharedPreferences.getBoolean("sounds",true))
+                {
+                    mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_legend_in);
+                    mediaPlayer.start();
+                }
+                if (sharedPreferences.getString("pause","0").compareTo("0")==0)
+                {
+                    Intent intent = new Intent(MenuActivity.this, ClassicPlayActivity.class);
+                    startActivity(intent);
+                    if (sharedPreferences.getBoolean("sounds",true))
+                    {
+                        mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.music_game);
+                        mediaPlayer.start();
+                    }
+                }
+                else
+                {
+//                    dialogBuilder.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                    dialogBuilder
+                            .withTitle("Message")                                  //.withTitle(null)  no title
+                            .withTitleColor("#FFFFFF")                                  //def
+                            .withDividerColor("#11000000")//def
+                            .withMessage("Choose one of the options")                     //.withMessage(null)  no Msg
+                            .withMessageColor("#FFFFFFFF")                              //def  | withMessageColor(int resid)
+                            .withDialogColor("#FFE74C3C")                               //def  | withDialogColor(int resid)                               //def
+//                            .withIcon(getResources().getDrawable(R.drawable.icon))
+                            .isCancelableOnTouchOutside(true)                           //def    | isCancelable(true)
+                            .withDuration(700)                                          //def
+                            .withEffect(effect)                                         //def Effectstype.Slidetop
+                            .withButton1Text("RESTART")                                 //def gone
+                            .withButton2Text("CONTINUE")                                //def gone
+                            .setCustomView(R.layout.custom_view,v.getContext())         //.setCustomView(View or ResId,context)
+                            .setButton1Click(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    ClassicPlayActivity.restart();
+                                    Intent intent = new Intent(MenuActivity.this, ClassicPlayActivity.class);
+                                    startActivity(intent);
+                                    if (sharedPreferences.getBoolean("sounds",true))
+                                    {
+                                        mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.music_game);
+                                        mediaPlayer.start();
+                                    }
+                                }
+                            })
+                            .setButton2Click(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    Intent intent = new Intent(MenuActivity.this, ClassicPlayActivity.class);
+                                    startActivity(intent);
+                                    if (sharedPreferences.getBoolean("sounds",true))
+                                    {
+                                        mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.music_game);
+                                        mediaPlayer.start();
+                                    }
+                                }
+                            }).show();
+                }
             }
         });
 
@@ -69,9 +147,9 @@ public class MenuActivity extends Activity {
             @Override
             public void onClick(View v)
             {
-                Intent intent = new Intent(MenuActivity.this, TimeTrialActivity.class);
-                startActivity(intent);
-                MenuActivity.this.finish();
+                Toast.makeText(MenuActivity.this,"Coming Soon ...",Toast.LENGTH_LONG).show();
+//                Intent intent = new Intent(MenuActivity.this, TimeTrialActivity.class);
+//                startActivity(intent);
             }
         });
 
@@ -85,25 +163,67 @@ public class MenuActivity extends Activity {
             @Override
             public void onClick(View v)
             {
+                if (sharedPreferences.getBoolean("sounds",true))
+                {
+                    mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_legend_in);
+                    mediaPlayer.start();
+                }
                 dialogSetting.show();
             }
         });
 
         btnSounds= (Button) dialogSetting.findViewById(R.id.btnSounds);
+        if (!sharedPreferences.getBoolean("sounds",true))
+        {
+            btnSounds.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_volume_off_black_24dp, 0, 0, 0);
+        }
         btnSounds.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (sounds)
+                if (sharedPreferences.getBoolean("sounds",true))
                 {
-                    sounds=false;
+                    editor.putBoolean("sounds",false);
+                    editor.commit();
+                    mediaPlayer.pause();
                     btnSounds.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_volume_off_black_24dp, 0, 0, 0);
                 }
                 else
                 {
-                    sounds=true;
+                    mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_fail);
+                    mediaPlayer.start();
+                    editor.putBoolean("sounds",true);
+                    editor.commit();
                     btnSounds.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_volume_up_black_24dp, 0, 0, 0);
+                }
+            }
+        });
+
+        btnBackgroundColor=(Button) dialogSetting.findViewById(R.id.btnBackgroundColor);
+        btnBackgroundColor.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (sharedPreferences.getBoolean("sounds",true))
+                {
+                    mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_fail);
+                    mediaPlayer.start();
+                }
+            }
+        });
+
+        btnLanguage= (Button) dialogSetting.findViewById(R.id.btnLanguage);
+        btnLanguage.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (sharedPreferences.getBoolean("sounds",true))
+                {
+                    mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_fail);
+                    mediaPlayer.start();
                 }
             }
         });
@@ -118,7 +238,40 @@ public class MenuActivity extends Activity {
             @Override
             public void onClick(View v)
             {
+                if (sharedPreferences.getBoolean("sounds",true))
+                {
+                    mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_legend_in);
+                    mediaPlayer.start();
+                }
                 dialogInformation.show();
+            }
+        });
+
+        btnHowToPlay= (Button) dialogInformation.findViewById(R.id.btnHowToPlay);
+        btnHowToPlay.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (sharedPreferences.getBoolean("sounds",true))
+                {
+                    mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_fail);
+                    mediaPlayer.start();
+                }
+            }
+        });
+
+        btnAbout2048Ball= (Button) dialogInformation.findViewById(R.id.btnAbout2048Ball);
+        btnAbout2048Ball.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (sharedPreferences.getBoolean("sounds",true))
+                {
+                    mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_fail);
+                    mediaPlayer.start();
+                }
             }
         });
     }

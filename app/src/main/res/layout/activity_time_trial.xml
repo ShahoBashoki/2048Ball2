@@ -26,12 +26,14 @@
         android:layout_centerHorizontal="true"/>
 
     <TextView
-        android:id="@+id/txtBest"
+        android:id="@+id/txtClock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txt"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
-        android:textSize="30sp"
+        android:text="00:00"
+        android:textSize="20dp"
         android:textStyle="bold" />
 
 </RelativeLayout>

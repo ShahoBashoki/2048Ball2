@@ -8,4 +8,8 @@
     <string name="BackgroundColor">Background color</string>
     <string name="Language">Language</string>
     <string name="highscore">2048 Ball</string>
+    <string name="restart_game">Restart</string>
+    <string name="continue_game">Continue</string>
+    <string name="menu">Menu</string>
+    <string name="costomview">im custom view</string>
 </resources>
