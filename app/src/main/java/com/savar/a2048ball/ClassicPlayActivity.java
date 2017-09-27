@@ -34,20 +34,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class ClassicPlayActivity extends Activity implements SensorEventListener2
-{
-    public static int score=0;
+public class ClassicPlayActivity extends Activity implements SensorEventListener2 {
+    public static int score = 0;
 
-    public static ArrayList<Float> xPos=new ArrayList<Float>();
-    public static ArrayList<Float> xVel=new ArrayList<Float>();
-    public static ArrayList<Float> yPos=new ArrayList<Float>();
-    public static ArrayList<Float> yVel=new ArrayList<Float>();
-    public static ArrayList<Float> radius=new ArrayList<Float>();
+    public static ArrayList<Float> xPos = new ArrayList<Float>();
+    public static ArrayList<Float> xVel = new ArrayList<Float>();
+    public static ArrayList<Float> yPos = new ArrayList<Float>();
+    public static ArrayList<Float> yVel = new ArrayList<Float>();
+    public static ArrayList<Float> radius = new ArrayList<Float>();
 
-    public static ArrayList<Integer> type=new ArrayList<Integer>();
-    public static ArrayList<Integer> start=new ArrayList<Integer>();
+    public static ArrayList<Integer> type = new ArrayList<Integer>();
+    public static ArrayList<Integer> start = new ArrayList<Integer>();
 
-    private Random random=new Random();
+    Thread threadUpdate;
+
+    private Random random = new Random();
     private int[][] Location;
 
     private float xAccel, yAccel;
@@ -56,29 +57,32 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
     private float xS, yS;
 
     private SensorManager sensorManager;
-    public static SharedPreferences.Editor edit=MenuActivity.sharedPreferences.edit();
+    public static SharedPreferences.Editor edit = MenuActivity.sharedPreferences.edit();
 
     private Effectstype effect;
     NiftyDialogBuilder dialogBuilder;
 
-    public static boolean flag=false;
+    public static boolean flag = false;
+
+
+    public static boolean ff = true;
+
 
     RelativeLayout screen;
     public static TextView txt;
     public static ImageView imgBest;
     Handler handler = new Handler();
-    int R1=255;
-    int G1=255;
-    int B1=255;
-    int R2=0;
-    int G2=0;
-    int B2=0;
+    int R1 = 255;
+    int G1 = 255;
+    int B1 = 255;
+    int R2 = 0;
+    int G2 = 0;
+    int B2 = 0;
     int flaggg;
-    Random rand=new Random();
+    Random rand = new Random();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final BallViewClassicPlay ballViewClassicPlay = new BallViewClassicPlay(this);
         ballViewClassicPlay.setBackgroundResource(R.color.colorBallView);
@@ -86,11 +90,11 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        screen=(RelativeLayout) findViewById(R.id.screen);
-        txt=(TextView) findViewById(R.id.txt);
+        screen = (RelativeLayout) findViewById(R.id.screen);
+        txt = (TextView) findViewById(R.id.txt);
         screen.addView(ballViewClassicPlay);
 
-        imgBest= (ImageView) findViewById(R.id.imgBest);
+        imgBest = (ImageView) findViewById(R.id.imgBest);
 
         colorBackground();
 
@@ -101,28 +105,26 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
         xMax = (float) size.x;
         yMax = (float) size.y;
 
-        Location=new int[(int) xMax+1][(int) yMax+1];
+        Location = new int[(int) xMax + 1][(int) yMax + 1];
 
-        dialogBuilder=NiftyDialogBuilder.getInstance(this);
-        effect=Effectstype.Sidefill;
+        dialogBuilder = NiftyDialogBuilder.getInstance(this);
+        effect = Effectstype.Sidefill;
 
-        if (MenuActivity.sharedPreferences.getString("pause","0").compareTo("0")==0)
+        if (MenuActivity.sharedPreferences.getString("pause", "0").compareTo("0") == 0)
             firstAddBall();
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     }
 
-    private void firstAddBall()
-    {
-        int xRandom=random.nextInt((int) xMax-99)+50;
-        int yRandom=random.nextInt((int) yMax-99)+50;
-        for (int n=xRandom-50;n<=xRandom+50;n++)
-        {
-            double a=Math.pow(n-xRandom,2);
-            double r=2500.0;
-            double b=Math.sqrt(r-a);
-            for (int u = (int) (yRandom-b); u<=yRandom+b; u++)
-                Location[n][u]=1;
+    private void firstAddBall() {
+        int xRandom = random.nextInt((int) xMax - 99) + 50;
+        int yRandom = random.nextInt((int) yMax - 99) + 50;
+        for (int n = xRandom - 50; n <= xRandom + 50; n++) {
+            double a = Math.pow(n - xRandom, 2);
+            double r = 2500.0;
+            double b = Math.sqrt(r - a);
+            for (int u = (int) (yRandom - b); u <= yRandom + b; u++)
+                Location[n][u] = 1;
         }
 
         xPos.add((float) xRandom);
@@ -133,13 +135,11 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
         type.add(2);
         start.add(1);
 
-        while (true)
-        {
-            xRandom=random.nextInt((int) xMax-99)+50;
-            yRandom=random.nextInt((int) yMax-99)+50;
+        while (true) {
+            xRandom = random.nextInt((int) xMax - 99) + 50;
+            yRandom = random.nextInt((int) yMax - 99) + 50;
 
-            if (Location[xRandom][yRandom]==0)
-            {
+            if (Location[xRandom][yRandom] == 0) {
                 float xDif = xPos.get(0) - xRandom;
                 float yDif = yPos.get(0) - yRandom;
                 float distanceSquared = (xDif * xDif) + (yDif * yDif);
@@ -149,13 +149,12 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
                     break;
             }
         }
-        for (int n=xRandom-50;n<=xRandom+50;n++)
-        {
-            double a=Math.pow(n-xRandom,2);
-            double r=2500.0;
-            double b=Math.sqrt(r-a);
-            for (int u = (int) (yRandom-b);u<=yRandom+b;u++)
-                Location[n][u]=1;
+        for (int n = xRandom - 50; n <= xRandom + 50; n++) {
+            double a = Math.pow(n - xRandom, 2);
+            double r = 2500.0;
+            double b = Math.sqrt(r - a);
+            for (int u = (int) (yRandom - b); u <= yRandom + b; u++)
+                Location[n][u] = 1;
         }
 
         xPos.add((float) xRandom);
@@ -168,91 +167,141 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
     }
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
         sensorManager.unregisterListener(this);
         super.onStop();
     }
 
     @Override
-    public void onFlushCompleted(Sensor sensor)
-    {
+    public void onFlushCompleted(Sensor sensor) {
 
     }
 
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent)
-    {
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-        {
-            xAccel=sensorEvent.values[0];
-            yAccel=-sensorEvent.values[1];
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            xAccel = sensorEvent.values[0];
+            yAccel = -sensorEvent.values[1];
 
-            for (int i=0;i<xPos.size();i++)
-                updateBall(i,radius.get(i));
+            for (int i = 0; i < xPos.size(); i++)
+                updateBall(i, radius.get(i));
         }
     }
 
-    private void updateBall(int i,float Radius)
-    {
+    private void updateBall(int i, float Radius) {
 //        float frameTime = 1;
 
-        xVel.set(i,xVel.get(i)+xAccel);
+        xVel.set(i, xVel.get(i) + xAccel);
         xS = xVel.get(i) / 2;
-        xPos.set(i,xPos.get(i)-xS);
+        xPos.set(i, xPos.get(i) - xS);
 
-        yVel.set(i,yVel.get(i)+yAccel);
+        yVel.set(i, yVel.get(i) + yAccel);
         yS = yVel.get(i) / 2;
-        yPos.set(i,yPos.get(i)-yS);
+        yPos.set(i, yPos.get(i) - yS);
 
 
-        if (xPos.get(i) > xMax-Radius)
-        {
-            xPos.set(i,xMax-Radius);
+        if (xPos.get(i) > xMax - Radius) {
+            xPos.set(i, xMax - Radius);
 
-            xVel.set(i,0.0f);
-        }
-        else if (xPos.get(i) < Radius)
-        {
-            xPos.set(i,Radius);
+            xVel.set(i, 0.0f);
+        } else if (xPos.get(i) < Radius) {
+            xPos.set(i, Radius);
 
-            xVel.set(i,0.0f);
+            xVel.set(i, 0.0f);
         }
 
-        if (yPos.get(i) > yMax-Radius)
-        {
-            yPos.set(i,yMax-Radius);
+        if (yPos.get(i) > yMax - Radius) {
+            yPos.set(i, yMax - Radius);
 
-            yVel.set(i,0.0f);
-        }
-        else if (yPos.get(i) < Radius)
-        {
-            yPos.set(i,Radius);
+            yVel.set(i, 0.0f);
+        } else if (yPos.get(i) < Radius) {
+            yPos.set(i, Radius);
 
-            yVel.set(i,0.0f);
+            yVel.set(i, 0.0f);
         }
 
         Collision(i);
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i)
-    {
+    public void onAccuracyChanged(Sensor sensor, int i) {
 
+    }
+
+    public void space(int v) {
+        for (int w = 0; w < xPos.size(); w++) {
+            if (v != w) {
+                try
+                {
+                    float xDif = xPos.get(w) - xPos.get(v);
+                    float yDif = yPos.get(w) - yPos.get(v);
+                    float distanceSquared = (xDif * xDif) + (yDif * yDif);
+//                Log.i("shaho",w+"//////"+v+"////////"+xPos.size()+"/////////"+yPos.size()+"////////"+radius.size());
+                    boolean collosion = distanceSquared < (radius.get(w) + radius.get(v)) * (radius.get(w) + radius.get(v));
+
+                    if (collosion) {
+                        float spaceOfCollosin = (xPos.get(w) - xPos.get(v)) - radius.get(w);
+                        if (xPos.get(w) > xPos.get(v) && xPos.get(w) + radius.get(w) + spaceOfCollosin <= xMax) {
+                            xPos.set(w, xPos.get(w) + spaceOfCollosin);
+                        }
+                        if (xPos.get(w) > xPos.get(v) && xPos.get(w) + radius.get(w) + spaceOfCollosin > xMax) {
+                            xPos.set(v, xPos.get(v) - spaceOfCollosin);
+                        }
+                        spaceOfCollosin = (xPos.get(v) - xPos.get(w)) - radius.get(v);
+                        if (xPos.get(w) < xPos.get(v) && xPos.get(w) - radius.get(w) - spaceOfCollosin >= 0) {
+                            xPos.set(w, xPos.get(w) - spaceOfCollosin);
+                        }
+                        if (xPos.get(w) < xPos.get(v) && xPos.get(w) - radius.get(w) - spaceOfCollosin < 0) {
+                            xPos.set(v, xPos.get(v) + spaceOfCollosin);
+                        }
+                        spaceOfCollosin = (yPos.get(w) - yPos.get(v)) - radius.get(w);
+                        if (yPos.get(w) > yPos.get(v) && yPos.get(w) + radius.get(w) + spaceOfCollosin <= yMax) {
+                            yPos.set(w, yPos.get(w) + spaceOfCollosin);
+                        }
+                        if (yPos.get(w) > yPos.get(v) && yPos.get(w) + radius.get(w) + spaceOfCollosin > yMax) {
+                            yPos.set(v, yPos.get(v) - spaceOfCollosin);
+                        }
+                        spaceOfCollosin = (yPos.get(v) - yPos.get(w)) - radius.get(v);
+                        if (yPos.get(w) < yPos.get(v) && yPos.get(w) - radius.get(w) - spaceOfCollosin >= 0) {
+                            yPos.set(w, yPos.get(w) - spaceOfCollosin);
+                        }
+                        if (yPos.get(w) < yPos.get(v) && yPos.get(w) - radius.get(w) - spaceOfCollosin > 0) {
+                            yPos.set(v, yPos.get(v) + spaceOfCollosin);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    continue;
+                }
+
+            }
+
+            for (int x = 0; x < xPos.size(); x++) {
+                if (x != w) {
+                    float xDif = xPos.get(w) - xPos.get(x);
+                    float yDif = yPos.get(w) - yPos.get(x);
+                    float distanceSquared = (xDif * xDif) + (yDif * yDif);
+                    boolean collosion = distanceSquared < (radius.get(w) + radius.get(x)) * (radius.get(w) + radius.get(x));
+
+                    if (collosion)
+                        space(x);
+                }
+            }
+        }
     }
 
     public void Collision(int i)
     {
-        boolean flagCollosion=true;
-        for (int x=0;x<xPos.size();x++)
-            if (x!=i && i<xPos.size())
+        boolean flagCollosion = true;
+        for (int x = 0; x < xPos.size(); x++)
+            if (x != i && i < xPos.size())
             {
                 float xDif = xPos.get(i) - xPos.get(x);
                 float yDif = yPos.get(i) - yPos.get(x);
@@ -260,9 +309,9 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
                 boolean collosion = distanceSquared < (radius.get(i) + radius.get(x)) * (radius.get(i) + radius.get(x));
 
                 // وقتی دو توپ غیر هم امتیاز به هم برخورد می کنند
-                if(collosion && type.get(i) != type.get(x) && flagCollosion)
+                if (collosion && type.get(i) != type.get(x) && flagCollosion)
                 {
-                    flagCollosion=false;
+                    flagCollosion = false;
                     xPos.set(i, xPos.get(i) + xS);
                     yPos.set(i, yPos.get(i) + yS);
 
@@ -271,18 +320,18 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
                 }
 
                 // وقتی دو توپ هم امتیاز به هم برخورد می کنند
-                if (collosion && type.get(i).compareTo(type.get(x))==0)
+                if (collosion && type.get(i).compareTo(type.get(x)) == 0)
                 {
-                    score=score+(type.get(i)*2);
+                    score = score + (type.get(i) * 2);
 
-                    if (type.get(i)==2)
-                        flag=true;
+                    if (type.get(i) == 2)
+                        flag = true;
 
-                    float xFlag=(xPos.get(i)+xPos.get(x))/2;
-                    float yFlag=(yPos.get(i)+yPos.get(x))/2;
-                    int typeFlag=type.get(i)+type.get(x);
+                    float xFlag = (xPos.get(i) + xPos.get(x)) / 2;
+                    float yFlag = (yPos.get(i) + yPos.get(x)) / 2;
+                    int typeFlag = type.get(i) + type.get(x);
 
-                    if (i>x)
+                    if (i > x)
                     {
                         remove(i);
                         remove(x);
@@ -297,245 +346,259 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
                     xVel.add(0.0f);
                     yPos.add(yFlag);
                     yVel.add(0.0f);
-                    final int n=typeFlag/2;
-                    radius.add((float) (49+n));
+                    final int n = typeFlag / 2;
+                    radius.add((float) (49 + n));
                     type.add(typeFlag);
                     start.add(1);
 
-                    Thread thread=new Thread()
+                    space(xPos.size() - 1);
+
+                    threadUpdate = new Thread()
                     {
                         @Override
                         public void run()
                         {
-                            boolean out=true;
-                            while (out)
+                            Log.i("shaho","5646465464df65s4df6sdf4s6d4f6sd54fs6d5f4s654fs6f46s");
+                            boolean out = true;
+                            while (ff)
                             {
                                 for (int[] row : Location)
-                                    Arrays.fill(row,0);
+                                    Arrays.fill(row, 0);
 
-                                out=false;
+//                                out=false;
+
+//                                space(xPos.size() - 1);
 
                                 for (int w = 0; w < xPos.size(); w++)
                                 {
-                                    if (w!=xPos.size()-1)
+//                                    int count1=0;
+//                                    Float count2=yPos.get(w);
+//                                    for (int num = (int) (xPos.get(w)-radius.get(w)+n-1); num<=xPos.get(w)+radius.get(w)-n+1; num++)
+//                                    Log.i("shaho", "//////////////////////");
+//                                    Log.i("shaho", w + "--" + xPos.size());
+//                                    if(xPos.size()!=w)
+//                                        continue;
+//                                    Log.i("shaho",w+"////////"+xPos.size()+"/////////"+yPos.size()+"////////"+radius.size());
+                                    try
                                     {
-                                        float xDif2 = xPos.get(w) - xPos.get(xPos.size()-1);
-                                        float yDif2 = yPos.get(w) - yPos.get(xPos.size()-1);
-                                        float distanceSquared2 = (xDif2 * xDif2) + (yDif2 * yDif2);
-                                        boolean collosion2 = distanceSquared2 < (radius.get(w) + radius.get(xPos.size()-1)) * (radius.get(w) + radius.get(xPos.size()-1));
-
-                                        if (collosion2)
+                                        for (int num = (int) (xPos.get(w) - radius.get(w)); num <= xPos.get(w) + radius.get(w); num++)
                                         {
-                                            
+//                                        Log.i("shaho",w+"////////"+xPos.size()+"/////////"+yPos.size()+"////////"+radius.size());
+                                            double a = Math.pow(num - xPos.get(w), 2);
+                                            double r = Math.pow(radius.get(w), 2);
+                                            double b = Math.sqrt(r - a);
+//                                        if (num<0)
+//                                            count1=n-1;
+//                                        else if (num>xMax)
+//                                            count1=1-n;
+//                                        if (yPos.size() != w)
+//                                            continue;
+                                            Log.i("shaho",w+"////////"+xPos.size()+"/////////"+yPos.size()+"////////"+radius.size());
+                                            try
+                                            {
+                                                for (int u = (int) (yPos.get(w) - b); u <= yPos.get(w) + b; u++)
+                                                {
+//                                            if (u<0)
+//                                                count2=n-1;
+//                                            else if (u>yMax)
+//                                                count2=1-n;
+//                                            Location[num + count1][u + count2] = 1;
+                                                    Location[num][u] = 1;
+                                                }
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                continue;
+                                            }
+
                                         }
                                     }
-
-                                    int count1=0;
-                                    int count2=0;
-                                    for (int num = (int) (xPos.get(w)-radius.get(w)+n-1); num<=xPos.get(w)+radius.get(w)-n+1; num++)
+                                    catch (Exception e)
                                     {
-                                        double a=Math.pow(num-xPos.get(w),2);
-                                        double r=Math.pow(radius.get(w),2);
-                                        double b=Math.sqrt(r-a);
-                                        if (num<0)
-                                            count1=n-1;
-                                        else if (num>xMax)
-                                            count1=1-n;
-                                        for (int u = (int) (yPos.get(w)-b); u<=yPos.get(w)+b; u++)
-                                        {
-                                            if (u<0)
-                                                count2=n-1;
-                                            else if (u>yMax)
-                                                count2=1-n;
-                                            Location[num + count1][u + count2] = 1;
-                                        }
+                                        continue;
                                     }
+
                                 }
                             }
 
                         }
                     };
+                    threadUpdate.start();
 
                     if (flag) //زمانی که دو تا 2 به هم میخورند
                     {
-                        int xRandom;
-                        int yRandom;
-                        while (true)
-                        {
-                            xRandom=random.nextInt((int) xMax-99)+50;
-                            yRandom=random.nextInt((int) yMax-99)+50;
+//                        ff = false;
+//                        threadUpdate.interrupt();
+//                        threadUpdate=null;
 
-                            if (Location[xRandom][yRandom]==0)
-                            {
-                                boolean j=false;
-                                for (int s=0;s<xPos.size();s++)
-                                {
-                                    float xDif3 = xPos.get(s) - xRandom;
-                                    float yDif3 = yPos.get(s) - yRandom;
-                                    float distanceSquared3 = (xDif3 * xDif3) + (yDif3 * yDif3);
-                                    boolean collosion3 = distanceSquared3 < (radius.get(s) + 50) * (radius.get(s) + 50);
+                        add2Ball();
 
-                                    if (collosion3)
-                                        j=true;
-                                }
-                                if (!j)
-                                    break;
-                            }
-                        }
-                        for (int z=xRandom-50;z<=xRandom+50;z++)
-                        {
-                            double a=Math.pow(z-xRandom,2);
-                            double r=2500.0;
-                            double b=Math.sqrt(r-a);
-                            for (int u = (int) (yRandom-b);u<=yRandom+b;u++)
-                                Location[z][u]=1;
-                        }
-
-                        xPos.add((float) xRandom);
-                        xVel.add(0.0f);
-                        yPos.add((float) yRandom);
-                        yVel.add(0.0f);
-                        radius.add((float) 50);
-                        type.add(2);
-                        start.add(1);
-
-                        while (true)
-                        {
-                            xRandom=random.nextInt((int) xMax-99)+50;
-                            yRandom=random.nextInt((int) yMax-99)+50;
-
-                            if (Location[xRandom][yRandom]==0)
-                            {
-                                boolean j=false;
-                                for (int s=0;s<xPos.size();s++)
-                                {
-                                    float xDif3 = xPos.get(s) - xRandom;
-                                    float yDif3 = yPos.get(s) - yRandom;
-                                    float distanceSquared3 = (xDif3 * xDif3) + (yDif3 * yDif3);
-                                    boolean collosion3 = distanceSquared3 < (radius.get(s) + 50) * (radius.get(s) + 50);
-
-                                    if (collosion3)
-                                        j=true;
-                                }
-                                if (!j)
-                                    break;
-                            }
-                        }
-                        for (int z=xRandom-50;z<=xRandom+50;z++)
-                        {
-                            double a=Math.pow(z-xRandom,2);
-                            double r=2500.0;
-                            double b=Math.sqrt(r-a);
-                            for (int u = (int) (yRandom-b);u<=yRandom+b;u++)
-                                Location[z][u]=1;
-                        }
-
-                        xPos.add((float) xRandom);
-                        xVel.add(0.0f);
-                        yPos.add((float) yRandom);
-                        yVel.add(0.0f);
-                        radius.add((float) 50);
-                        type.add(2);
-                        start.add(1);
-
+//                        try
+//                        {
+//                            Thread.sleep(1);
+//                        }
+//                        catch (InterruptedException e)
+//                        {
+//                            e.printStackTrace();
+//                        }
+//                        ff = true;
                         flag=false;
                     }
                 }
             }
     }
 
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
+    public void add2Ball() {
+        int xRandom;
+        int yRandom;
+        while (true) {
+            xRandom = random.nextInt((int) xMax - 99) + 50;
+            yRandom = random.nextInt((int) yMax - 99) + 50;
 
-        edit.putString("pause",arrayToString());
-        edit.commit();
+            if (Location[xRandom][yRandom] == 0) {
+                boolean j = false;
+                for (int s = 0; s < xPos.size(); s++) {
+                    float xDif3 = xPos.get(s) - xRandom;
+                    float yDif3 = yPos.get(s) - yRandom;
+                    float distanceSquared3 = (xDif3 * xDif3) + (yDif3 * yDif3);
+                    boolean collosion3 = distanceSquared3 < (radius.get(s) + 50) * (radius.get(s) + 50);
 
-        score=0;
+                    if (collosion3)
+                        j = true;
+                }
+                if (!j)
+                    break;
+            }
+        }
+        for (int z = xRandom - 50; z <= xRandom + 50; z++) {
+            double a = Math.pow(z - xRandom, 2);
+            double r = 2500.0;
+            double b = Math.sqrt(r - a);
+            for (int u = (int) (yRandom - b); u <= yRandom + b; u++)
+                Location[z][u] = 1;
+        }
 
-        xPos=new ArrayList<Float>();
-        xVel=new ArrayList<Float>();
-        yPos=new ArrayList<Float>();
-        yVel=new ArrayList<Float>();
-        radius=new ArrayList<Float>();
+        xPos.add((float) xRandom);
+        xVel.add(0.0f);
+        yPos.add((float) yRandom);
+        yVel.add(0.0f);
+        radius.add((float) 50);
+        type.add(2);
+        start.add(1);
 
-        type=new ArrayList<Integer>();
-        start=new ArrayList<Integer>();
+        while (true) {
+            xRandom = random.nextInt((int) xMax - 99) + 50;
+            yRandom = random.nextInt((int) yMax - 99) + 50;
 
-        flag=false;
+            if (Location[xRandom][yRandom] == 0) {
+                boolean j = false;
+                for (int s = 0; s < xPos.size(); s++) {
+                    float xDif3 = xPos.get(s) - xRandom;
+                    float yDif3 = yPos.get(s) - yRandom;
+                    float distanceSquared3 = (xDif3 * xDif3) + (yDif3 * yDif3);
+                    boolean collosion3 = distanceSquared3 < (radius.get(s) + 50) * (radius.get(s) + 50);
 
-        //finish();
+                    if (collosion3)
+                        j = true;
+                }
+                if (!j)
+                    break;
+            }
+        }
+        for (int z = xRandom - 50; z <= xRandom + 50; z++) {
+            double a = Math.pow(z - xRandom, 2);
+            double r = 2500.0;
+            double b = Math.sqrt(r - a);
+            for (int u = (int) (yRandom - b); u <= yRandom + b; u++)
+                Location[z][u] = 1;
+        }
+
+        xPos.add((float) xRandom);
+        xVel.add(0.0f);
+        yPos.add((float) yRandom);
+        yVel.add(0.0f);
+        radius.add((float) 50);
+        type.add(2);
+        start.add(1);
+
+        flag = false;
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onPause() {
+        super.onPause();
+
+        edit.putString("pause", arrayToString());
+        edit.commit();
+
+        score = 0;
+        xPos = new ArrayList<Float>();
+        xVel = new ArrayList<Float>();
+        yPos = new ArrayList<Float>();
+        yVel = new ArrayList<Float>();
+        radius = new ArrayList<Float>();
+        type = new ArrayList<Integer>();
+        start = new ArrayList<Integer>();
+        flag = false;
+    }
+
+    @Override
+    protected void onResume() {
         super.onResume();
 
-        stringToArray(MenuActivity.sharedPreferences.getString("pause","0"));
+        stringToArray(MenuActivity.sharedPreferences.getString("pause", "0"));
 
-        if (MenuActivity.sharedPreferences.getInt("scoreClassicPlay",0)<= score && MenuActivity.sharedPreferences.getString("pause","0").compareTo("0")!=0)
+        if (MenuActivity.sharedPreferences.getInt("scoreClassicPlay", 0) <= score && MenuActivity.sharedPreferences.getString("pause", "0").compareTo("0") != 0)
             imgBest.setImageResource(R.drawable.crown);
     }
 
-    public void colorBackground()
-    {
-        R1=rand.nextInt((255 - 0) + 1) + 0;
-        G1=rand.nextInt((255 - 0) + 1) + 0;
-        B1=rand.nextInt((255 - 0) + 1) + 0;
-        R2=rand.nextInt((255 - 0) + 1) + 0;
-        G2=rand.nextInt((255 - 0) + 1) + 0;
-        B2=rand.nextInt((255 - 0) + 1) + 0;
+    public void colorBackground() {
+        R1 = rand.nextInt((255 - 0) + 1) + 0;
+        G1 = rand.nextInt((255 - 0) + 1) + 0;
+        B1 = rand.nextInt((255 - 0) + 1) + 0;
+        R2 = rand.nextInt((255 - 0) + 1) + 0;
+        G2 = rand.nextInt((255 - 0) + 1) + 0;
+        B2 = rand.nextInt((255 - 0) + 1) + 0;
 
-        (new Thread()
-        {
+        (new Thread() {
             @Override
-            public void run()
-            {
-                while (true)
-                {
-                    handler.post(new Runnable()
-                    {
+            public void run() {
+                while (true) {
+                    handler.post(new Runnable() {
                         @Override
-                        public void run()
-                        {
+                        public void run() {
                             ObjectAnimator colorFade = ObjectAnimator.ofObject(screen, "backgroundColor", new ArgbEvaluator(), Color.argb(255, R1, G1, B1), Color.argb(255, R2, G2, B2));
                             colorFade.setDuration(7000);
                             colorFade.start();
                         }
                     });
                     // next will pause the thread for some time
-                    try
-                    {
+                    try {
                         sleep(10000);
-                    }
-                    catch (InterruptedException e)
-                    {
+                    } catch (InterruptedException e) {
                         break;
                     }
-                    flaggg=R1;
-                    R1=R2;
-                    R2=flaggg;
+                    flaggg = R1;
+                    R1 = R2;
+                    R2 = flaggg;
 
-                    flaggg=G1;
-                    G1=G2;
-                    G2=flaggg;
+                    flaggg = G1;
+                    G1 = G2;
+                    G2 = flaggg;
 
-                    flaggg=B1;
-                    B1=B2;
-                    B2=flaggg;
+                    flaggg = B1;
+                    B1 = B2;
+                    B2 = flaggg;
 
-                    R2=rand.nextInt((255 - 0) + 1) + 0;
-                    G2=rand.nextInt((255 - 0) + 1) + 0;
-                    B2=rand.nextInt((255 - 0) + 1) + 0;
+                    R2 = rand.nextInt((255 - 0) + 1) + 0;
+                    G2 = rand.nextInt((255 - 0) + 1) + 0;
+                    B2 = rand.nextInt((255 - 0) + 1) + 0;
                 }
             }
         }).start();
     }
 
-    public void remove(int x)
-    {
+    public void remove(int x) {
         xPos.remove(x);
         xVel.remove(x);
         yPos.remove(x);
@@ -545,72 +608,65 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
         start.remove(x);
     }
 
-    public String arrayToString()
-    {
-        String s="";
-        s=xPos.size()+"_"+score+"_";
-        for (int x=0;x<xPos.size();x++)
+    public String arrayToString() {
+        String s = "";
+        s = xPos.size() + "_" + score + "_";
+        for (int x = 0; x < xPos.size(); x++)
             s += xPos.get(x) + "_";
-        for (int x=0;x<xVel.size();x++)
-            s+=xVel.get(x)+"_";
-        for (int x=0;x<yPos.size();x++)
+        for (int x = 0; x < xVel.size(); x++)
+            s += xVel.get(x) + "_";
+        for (int x = 0; x < yPos.size(); x++)
             s += yPos.get(x) + "_";
-        for (int x=0;x<yVel.size();x++)
+        for (int x = 0; x < yVel.size(); x++)
             s += yVel.get(x) + "_";
-        for (int x=0;x<radius.size();x++)
-            s+=radius.get(x)+"_";
-        for (int x=0;x<type.size();x++)
-            s+=type.get(x)+"_";
-        for (int x=0;x<start.size();x++)
-            s+=start.get(x)+"_";
+        for (int x = 0; x < radius.size(); x++)
+            s += radius.get(x) + "_";
+        for (int x = 0; x < type.size(); x++)
+            s += type.get(x) + "_";
+        for (int x = 0; x < start.size(); x++)
+            s += start.get(x) + "_";
 
         return s;
     }
 
-    public void stringToArray(String s)
-    {
-        String[] parts=s.split("_");
-        int length=Integer.parseInt(parts[0]);
-        if (length!=0)
-            score=Integer.parseInt(parts[1]);
-        for (int x=0;x<length;x++)
-            xPos.add(Float.parseFloat(parts[x+2]));
-        for (int x=0;x<length;x++)
-            xVel.add(Float.parseFloat(parts[x+2+length]));
-        for (int x=0;x<length;x++)
-            yPos.add(Float.parseFloat(parts[x+2+(length*2)]));
-        for (int x=0;x<length;x++)
-            yVel.add(Float.parseFloat(parts[x+2+(length*3)]));
-        for (int x=0;x<length;x++)
-            radius.add(Float.parseFloat(parts[x+2+(length*4)]));
-        for (int x=0;x<length;x++)
-            type.add(Integer.parseInt(parts[x+2+(length*5)]));
-        for (int x=0;x<length;x++)
-            start.add(Integer.parseInt(parts[x+2+(length*6)]));
+    public void stringToArray(String s) {
+        String[] parts = s.split("_");
+        int length = Integer.parseInt(parts[0]);
+        if (length != 0)
+            score = Integer.parseInt(parts[1]);
+        for (int x = 0; x < length; x++)
+            xPos.add(Float.parseFloat(parts[x + 2]));
+        for (int x = 0; x < length; x++)
+            xVel.add(Float.parseFloat(parts[x + 2 + length]));
+        for (int x = 0; x < length; x++)
+            yPos.add(Float.parseFloat(parts[x + 2 + (length * 2)]));
+        for (int x = 0; x < length; x++)
+            yVel.add(Float.parseFloat(parts[x + 2 + (length * 3)]));
+        for (int x = 0; x < length; x++)
+            radius.add(Float.parseFloat(parts[x + 2 + (length * 4)]));
+        for (int x = 0; x < length; x++)
+            type.add(Integer.parseInt(parts[x + 2 + (length * 5)]));
+        for (int x = 0; x < length; x++)
+            start.add(Integer.parseInt(parts[x + 2 + (length * 6)]));
     }
 
-    public static void restart()
-    {
-        score=0;
+    public static void restart() {
+        score = 0;
+        xPos = new ArrayList<Float>();
+        xVel = new ArrayList<Float>();
+        yPos = new ArrayList<Float>();
+        yVel = new ArrayList<Float>();
+        radius = new ArrayList<Float>();
+        type = new ArrayList<Integer>();
+        start = new ArrayList<Integer>();
+        flag = false;
 
-        xPos=new ArrayList<Float>();
-        xVel=new ArrayList<Float>();
-        yPos=new ArrayList<Float>();
-        yVel=new ArrayList<Float>();
-        radius=new ArrayList<Float>();
-
-        type=new ArrayList<Integer>();
-        start=new ArrayList<Integer>();
-
-        flag=false;
-
-        edit.putString("pause","0");
+        edit.putString("pause", "0");
         edit.commit();
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         dialogBuilder
                 .withTitle("Message")                                  //.withTitle(null)  no title
                 .withTitleColor("#000000")                                  //def
@@ -618,29 +674,25 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
                 .withMessage("Choose one of the options")                     //.withMessage(null)  no Msg
                 .withMessageColor("#000000")                              //def  | withMessageColor(int resid)
                 .withDialogColor("#dcdcdc")                               //def  | withDialogColor(int resid)                               //def
-//                            .withIcon(getResources().getDrawable(R.drawable.icon))
                 .isCancelableOnTouchOutside(true)                           //def    | isCancelable(true)
                 .withDuration(700)                                          //def
                 .withEffect(effect)                                         //def Effectstype.Slidetop
                 .withButton1Text("BACK TO TITLE")                                 //def gone
                 .withButton2Text("CONTINUE")                                //def gone
-//                .setCustomView(R.layout.custom_view,v.getContext())         //.setCustomView(View or ResId,context)
-                .setButton1Click(new View.OnClickListener()
-                {
+                .setButton1Click(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v)
-                    {
+                    public void onClick(View v) {
                         Intent intent = new Intent(ClassicPlayActivity.this, MenuActivity.class);
                         startActivity(intent);
                         finish();
-                        MenuActivity.mediaPlayer.pause();
+                        if (MenuActivity.mediaPlayer.isPlaying())
+                            MenuActivity.mediaPlayer.pause();
+                        dialogBuilder.cancel();
                     }
                 })
-                .setButton2Click(new View.OnClickListener()
-                {
+                .setButton2Click(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v)
-                    {
+                    public void onClick(View v) {
                         dialogBuilder.cancel();
                     }
                 }).show();

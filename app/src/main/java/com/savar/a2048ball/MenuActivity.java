@@ -70,6 +70,8 @@ public class MenuActivity extends Activity {
         dialogBuilder=NiftyDialogBuilder.getInstance(this);
         effect=Effectstype.Newspager;
 
+        mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_legend_in);
+
         ImageViewClassicPlay = (ImageView) findViewById(R.id.ImageViewClassicPlay);
         ImageViewClassicPlay.setOnClickListener(new View.OnClickListener()
         {
@@ -85,10 +87,12 @@ public class MenuActivity extends Activity {
                 {
                     Intent intent = new Intent(MenuActivity.this, ClassicPlayActivity.class);
                     startActivity(intent);
+                    MenuActivity.this.finish();
                     if (sharedPreferences.getBoolean("sounds",true))
                     {
                         mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.music_game);
                         mediaPlayer.start();
+                        mediaPlayer.setLooping(true);
                     }
                 }
                 else
@@ -116,11 +120,14 @@ public class MenuActivity extends Activity {
                                     ClassicPlayActivity.restart();
                                     Intent intent = new Intent(MenuActivity.this, ClassicPlayActivity.class);
                                     startActivity(intent);
+                                    MenuActivity.this.finish();
                                     if (sharedPreferences.getBoolean("sounds",true))
                                     {
                                         mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.music_game);
                                         mediaPlayer.start();
+                                        mediaPlayer.setLooping(true);
                                     }
+                                    dialogBuilder.cancel();
                                 }
                             })
                             .setButton2Click(new View.OnClickListener()
@@ -130,11 +137,14 @@ public class MenuActivity extends Activity {
                                 {
                                     Intent intent = new Intent(MenuActivity.this, ClassicPlayActivity.class);
                                     startActivity(intent);
+                                    MenuActivity.this.finish();
                                     if (sharedPreferences.getBoolean("sounds",true))
                                     {
                                         mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.music_game);
                                         mediaPlayer.start();
+                                        mediaPlayer.setLooping(true);
                                     }
+                                    dialogBuilder.cancel();
                                 }
                             }).show();
                 }
@@ -275,4 +285,12 @@ public class MenuActivity extends Activity {
             }
         });
     }
+
+//    @Override
+//    public void onBackPressed()
+//    {
+//        super.onBackPressed();
+//        MenuActivity.this.finish();
+////        Toast.makeText(MenuActivity.this,"jhkjhkjhk",Toast.LENGTH_LONG).show();
+//    }
 }//end of class
