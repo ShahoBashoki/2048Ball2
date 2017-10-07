@@ -1,5 +1,7 @@
 package com.savar.a2048ball;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -291,15 +293,15 @@ public class MenuActivity extends Activity {
                     btnSounds.setChecked(true);
                     sound_flag=false;
                 }
-                else
-                    sound_flag=true;
+//                else
+//                    sound_flag=true;
                 if (sharedPreferences.getBoolean("backgroundColor",true))
                 {
                     btnBackgroundColor.setChecked(true);
                     backgroundColor_flag=false;
                 }
-                else
-                    backgroundColor_flag=true;
+//                else
+//                    backgroundColor_flag=true;
                 dialogSetting.show();
             }
         });
@@ -311,44 +313,57 @@ public class MenuActivity extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
-                if (isChecked && sound_flag)
+                if (isChecked)
                 {
-                    mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_fail);
-                    mediaPlayer.start();
+                    if (sound_flag)
+                    {
+                        mediaPlayer = MediaPlayer.create(MenuActivity.this, R.raw.ui_fail);
+                        mediaPlayer.start();
+                    }
                     editor.putBoolean("sounds",true);
                     editor.commit();
                     sound_flag=true;
                 }
-                if (!isChecked)
+                else
                 {
                     editor.putBoolean("sounds",false);
                     editor.commit();
                     mediaPlayer.pause();
+                    sound_flag=true;
                 }
             }
         });
 
         if (!sharedPreferences.getBoolean("backgroundColor",true))
-            screen_color.setBackgroundColor(Color.argb(255,69,90,100));
+        {
+            ObjectAnimator colorFade = ObjectAnimator.ofObject(screen_color, "backgroundColor", new ArgbEvaluator(), Color.argb(255, 24, 255, 255), Color.argb(255, 69, 90, 100));
+            colorFade.setDuration(2000);
+            colorFade.start();
+        }
         btnBackgroundColor=(Switch) dialogSetting.findViewById(R.id.btnBackgroundColor);
         btnBackgroundColor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
-                if (isChecked && backgroundColor_flag)
+                if (isChecked)
                 {
                     editor.putBoolean("backgroundColor",true);
                     editor.commit();
-                    if (sharedPreferences.getBoolean("sounds",true))
+                    if (sharedPreferences.getBoolean("sounds",true) && backgroundColor_flag)
                     {
                         mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_fail);
                         mediaPlayer.start();
                     }
-                    screen_color.setBackgroundColor(Color.argb(255,24,255,255));
+                    if (backgroundColor_flag)
+                    {
+                        ObjectAnimator colorFade = ObjectAnimator.ofObject(screen_color, "backgroundColor", new ArgbEvaluator(), Color.argb(255, 69, 90, 100), Color.argb(255,24, 255, 255));
+                        colorFade.setDuration(2000);
+                        colorFade.start();
+                    }
                     backgroundColor_flag=true;
                 }
-                if (!isChecked)
+                else
                 {
                     editor.putBoolean("backgroundColor",false);
                     editor.commit();
@@ -357,7 +372,10 @@ public class MenuActivity extends Activity {
                         mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.ui_fail);
                         mediaPlayer.start();
                     }
-                    screen_color.setBackgroundColor(Color.argb(255,69,90,100));
+                    ObjectAnimator colorFade = ObjectAnimator.ofObject(screen_color, "backgroundColor", new ArgbEvaluator(), Color.argb(255, 24, 255, 255), Color.argb(255, 69, 90, 100));
+                    colorFade.setDuration(2000);
+                    colorFade.start();
+                    backgroundColor_flag=true;
                 }
             }
         });
