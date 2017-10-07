@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/screen_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#18FFFF"
+    android:background="@color/screen_color"
     android:orientation="vertical">
 
     <LinearLayout
@@ -27,6 +28,7 @@
             android:text="@string/highscore"
             android:textSize="40sp"
             android:textStyle="bold|italic"
+            android:fontFamily="R"
             app:colorSpace="150dp"
             app:colorSpeed="4dp" />
 
@@ -100,7 +102,8 @@
                         android:text="0"
                         android:textColor="@android:color/black"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_gravity="center"/>
 
                 </LinearLayout>
 
@@ -168,7 +171,8 @@
                         android:text="0"
                         android:textColor="@android:color/black"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_gravity="center"/>
 
                 </LinearLayout>
 

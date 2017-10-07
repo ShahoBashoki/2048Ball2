@@ -12,4 +12,6 @@
     <string name="continue_game">Continue</string>
     <string name="menu">Menu</string>
     <string name="costomview">im custom view</string>
+
+    <string name="typeface_font">font/alger.ttf</string>
 </resources>

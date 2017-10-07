@@ -13,6 +13,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/txtAbout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -35,7 +36,8 @@
             android:shadowRadius="5"
             android:text="@string/HowToPlay"
             android:textAllCaps="false"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/btnAbout2048Ball"

@@ -31,6 +31,10 @@ public class BallViewClassicPlay extends View
         paint.setStyle(Paint.Style.FILL);
         paint.setTextSize(50);
         paint.setTextAlign(Paint.Align.CENTER);
+        if (MenuActivity.sharedPreferences.getBoolean("language",true))
+            paint.setTypeface(MenuActivity.english_font);
+        else
+            paint.setTypeface(MenuActivity.farsi_font);
         for (int x = 0; x < ClassicPlayActivity.xPos.size(); x++)
         {
 //            if (ClassicPlayActivity.type.get(x)==2 && ClassicPlayActivity.start.get(x)==1)
