@@ -15,7 +15,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.hanks.htextview.rainbow.RainbowTextView
+        <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -28,9 +28,24 @@
             android:text="@string/highscore"
             android:textSize="40sp"
             android:textStyle="bold|italic"
-            android:fontFamily="R"
-            app:colorSpace="150dp"
-            app:colorSpeed="4dp" />
+            android:fontFamily="R" />
+
+        <!--<com.hanks.htextview.rainbow.RainbowTextView-->
+            <!--android:id="@+id/textView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="0.7"-->
+            <!--android:gravity="center"-->
+            <!--android:shadowColor="@color/TextViewShadow"-->
+            <!--android:shadowDx="20"-->
+            <!--android:shadowDy="20"-->
+            <!--android:shadowRadius="10"-->
+            <!--android:text="@string/highscore"-->
+            <!--android:textSize="40sp"-->
+            <!--android:textStyle="bold|italic"-->
+            <!--android:fontFamily="R"-->
+            <!--app:colorSpace="150dp"-->
+            <!--app:colorSpeed="4dp" />-->
 
     </LinearLayout>
 

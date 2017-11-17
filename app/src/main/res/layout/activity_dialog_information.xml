@@ -30,14 +30,14 @@
             android:background="@color/HowToPlayAbout2048Ball"
             android:drawableLeft="@mipmap/ic_help_outline_black_24dp"
             android:padding="8dp"
-            android:shadowColor="@color/TextViewShadow"
-            android:shadowDx="20"
-            android:shadowDy="20"
-            android:shadowRadius="5"
             android:text="@string/HowToPlay"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textStyle="bold"/>
+            <!--android:shadowColor="@color/TextViewShadow"-->
+            <!--android:shadowDx="20"-->
+            <!--android:shadowDy="20"-->
+            <!--android:shadowRadius="5"-->
 
         <Button
             android:id="@+id/btnAbout2048Ball"
@@ -47,14 +47,14 @@
             android:background="@color/HowToPlayAbout2048Ball"
             android:drawableLeft="@mipmap/ic_receipt_black_24dp"
             android:padding="8dp"
-            android:shadowColor="@color/TextViewShadow"
-            android:shadowDx="20"
-            android:shadowDy="20"
-            android:shadowRadius="5"
             android:text="@string/About2048Ball"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
+            <!--android:shadowColor="@color/TextViewShadow"-->
+            <!--android:shadowDx="20"-->
+            <!--android:shadowDy="20"-->
+            <!--android:shadowRadius="5"-->
 
     </LinearLayout>
 
