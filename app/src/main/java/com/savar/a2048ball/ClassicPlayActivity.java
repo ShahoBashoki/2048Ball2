@@ -93,6 +93,7 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
         txt = (TextView) findViewById(R.id.txt);
         screen.addView(ballViewClassicPlay);
 
+
         imgBest = (ImageView) findViewById(R.id.imgBest);
 
         colorBackground();
