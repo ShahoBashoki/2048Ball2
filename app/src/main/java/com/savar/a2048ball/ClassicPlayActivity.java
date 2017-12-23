@@ -3,7 +3,6 @@ package com.savar.a2048ball;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,13 +13,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener2;
 import android.hardware.SensorManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -34,7 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class ClassicPlayActivity extends Activity implements SensorEventListener2 {
+public class ClassicPlayActivity extends Activity implements SensorEventListener2
+{
     public static int score = 0;
 
     public static ArrayList<Float> xPos = new ArrayList<Float>();
@@ -46,8 +44,8 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
     public static ArrayList<Integer> type = new ArrayList<Integer>();
     public static ArrayList<Integer> start = new ArrayList<Integer>();
 
-    Thread threadUpdate;
-    Thread threadColor;
+    private Thread threadUpdate;
+    private Thread threadColor;
 
     private Random random = new Random();
     private int[][] Location;
@@ -61,32 +59,26 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
     public static SharedPreferences.Editor edit = MenuActivity.sharedPreferences.edit();
 
     private Effectstype effect;
-    NiftyDialogBuilder dialogBuilder;
+    private NiftyDialogBuilder dialogBuilder;
 
-    String title;
-    String message;
-    String text1;
-    String text2;
+    private String title;
+    private String message;
+    private String text1;
+    private String text2;
 
     public static boolean flag = false;
 
-
     public static boolean ff = true;
 
-
-    RelativeLayout screen;
+    private RelativeLayout screen;
     public static TextView txt;
     public static ImageView imgBest;
-    Handler handler = new Handler();
-    int[][] materialColorDay;
-    int R1 = 255;
-//    int G1 = 255;
-//    int B1 = 255;
-    int R2 = 0;
-//    int G2 = 0;
-//    int B2 = 0;
-    int flaggg;
-    Random rand = new Random();
+    private Handler handler = new Handler();
+    private int[][] materialColorDay;
+    private int R1 = 255;
+    private int R2 = 0;
+    private int flaggg;
+    private Random rand = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +126,9 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
 
         dialogBuilder = NiftyDialogBuilder.getInstance(this);
         effect = Effectstype.Sidefill;
+
+//        if (MenuActivity.flag_resume)
+//            resume();
 
         if (MenuActivity.sharedPreferences.getString("pause", "0").compareTo("0") == 0)
             firstAddBall();
@@ -544,6 +539,7 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
         edit.commit();
 
         score = 0;
+
         xPos = new ArrayList<Float>();
         xVel = new ArrayList<Float>();
         yPos = new ArrayList<Float>();
@@ -552,6 +548,14 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
         type = new ArrayList<Integer>();
         start = new ArrayList<Integer>();
         flag = false;
+    }
+
+    public void resume()
+    {
+        stringToArray(MenuActivity.sharedPreferences.getString("pause", "0"));
+        Toast.makeText(this,MenuActivity.sharedPreferences.getString("pause", "0"),Toast.LENGTH_SHORT).show();
+        if (MenuActivity.sharedPreferences.getInt("scoreClassicPlay", 0) <= score && MenuActivity.sharedPreferences.getString("pause", "0").compareTo("0") != 0)
+            imgBest.setImageResource(R.drawable.crown);
     }
 
     @Override
@@ -653,7 +657,7 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
         return s;
     }
 
-    public void stringToArray(String s) {
+    public static void stringToArray(String s) {
         String[] parts = s.split("_");
         int length = Integer.parseInt(parts[0]);
         if (length != 0)
@@ -706,10 +710,20 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
                 .setButton1Click(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(ClassicPlayActivity.this, MenuActivity.class);
-                        startActivity(intent);
-                        finish();
 
+//                        ClassicPlayActivity.this.onPause();
+//                        ClassicPlayActivity.this.onStop();
+//                        ClassicPlayActivity.this.onDestroy();
+
+
+                        Intent intent=new Intent(ClassicPlayActivity.this,MenuActivity.class);
+                        startActivity(intent);
+//
+//
+                        ClassicPlayActivity.this.finish();
+                        ClassicPlayActivity.this.finish();
+//                        onStop();
+//                        onDestroy();
 //                        threadUpdate.interrupt();
 //                        threadUpdate=null;
 //                        threadColor.interrupt();
@@ -717,6 +731,10 @@ public class ClassicPlayActivity extends Activity implements SensorEventListener
                         if (MenuActivity.mediaPlayer.isPlaying())
                             MenuActivity.mediaPlayer.pause();
                         dialogBuilder.cancel();
+
+//                        Intent intent = new Intent(ClassicPlayActivity.this, MenuActivity.class);
+//                        startActivity(intent);
+
                     }
                 })
                 .setButton2Click(new View.OnClickListener() {

@@ -25,21 +25,18 @@ import android.widget.Toast;
 
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
-import com.hanks.htextview.rainbow.RainbowTextView;
-import com.romainpiel.shimmer.Shimmer;
-import com.romainpiel.shimmer.ShimmerTextView;
 
 public class MenuActivity extends Activity {
-    public static ShimmerTextView txtScoreBestTimeTrial;
-    public static ShimmerTextView txtScoreBestClassicPlay;
-    Shimmer shimmerClassicPlay;
-    Shimmer shimmerTimeTrial;
+    public static TextView txtScoreBestTimeTrial;
+    public static TextView txtScoreBestClassicPlay;
+//    Shimmer shimmerClassicPlay;
+//    Shimmer shimmerTimeTrial;
     ImageView ImageViewClassicPlay;
     ImageView ImageViewTimeTrial;
     FloatingActionButton float_action_button_setting;
     FloatingActionButton float_action_button_information;
 
-    RainbowTextView textView;
+    TextView textView;
     TextView btnClassicPlay;
     TextView btnTimeTrial;
     TextView txtSetting;
@@ -66,6 +63,7 @@ public class MenuActivity extends Activity {
     private Effectstype effect;
     NiftyDialogBuilder dialogBuilder;
 
+    public static boolean flag_resume=false;
     boolean sound_flag=false;
     Switch btnSounds;
     boolean backgroundColor_flag=false;
@@ -88,15 +86,15 @@ public class MenuActivity extends Activity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MenuActivity.this);
         editor=sharedPreferences.edit();
 
-        txtScoreBestClassicPlay = (ShimmerTextView) findViewById(R.id.txtScoreBestClassicPlay);
+        txtScoreBestClassicPlay = (TextView) findViewById(R.id.txtScoreBestClassicPlay);
         txtScoreBestClassicPlay.setText(sharedPreferences.getInt("scoreClassicPlay",0)+"");
-        shimmerClassicPlay = new Shimmer();
-        shimmerClassicPlay.start(txtScoreBestClassicPlay);
-
-        txtScoreBestTimeTrial = (ShimmerTextView) findViewById(R.id.txtScoreBestTimeTrial);
+//        shimmerClassicPlay = new Shimmer();
+//        shimmerClassicPlay.start(txtScoreBestClassicPlay);
+//
+        txtScoreBestTimeTrial = (TextView) findViewById(R.id.txtScoreBestTimeTrial);
         txtScoreBestTimeTrial.setText(sharedPreferences.getInt("scoreTimeTrial",0)+"");
-        shimmerTimeTrial = new Shimmer();
-        shimmerTimeTrial.start(txtScoreBestTimeTrial);
+//        shimmerTimeTrial = new Shimmer();
+//        shimmerTimeTrial.start(txtScoreBestTimeTrial);
 
         dialogSetting=new Dialog(MenuActivity.this);
         dialogSetting.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -106,7 +104,7 @@ public class MenuActivity extends Activity {
         dialogInformation.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialogInformation.setContentView(R.layout.activity_dialog_information);
 
-        textView= (RainbowTextView) findViewById(R.id.textView);
+        textView= (TextView) findViewById(R.id.textView);
         btnClassicPlay=(TextView) findViewById(R.id.btnClassicPlay);
         btnTimeTrial= (TextView) findViewById(R.id.btnTimeTrial);
         txtSetting= (TextView) dialogSetting.findViewById(R.id.txtSetting);
@@ -119,7 +117,7 @@ public class MenuActivity extends Activity {
         btnAbout2048Ball= (Button) dialogInformation.findViewById(R.id.btnAbout2048Ball);
 
         farsi_font=Typeface.createFromAsset(getAssets(),"fonts/bkoodkbd.ttf");
-        english_font=Typeface.createFromAsset(getAssets(),"fonts/alger.ttf");
+        english_font=Typeface.createFromAsset(getAssets(),"fonts/old_english.ttf");
 
         if (sharedPreferences.getBoolean("language",true))
         {
@@ -204,7 +202,7 @@ public class MenuActivity extends Activity {
                 {
                     Intent intent = new Intent(MenuActivity.this, ClassicPlayActivity.class);
                     startActivity(intent);
-                    MenuActivity.this.finish();
+//                    MenuActivity.this.finish();
                     if (sharedPreferences.getBoolean("sounds",true))
                     {
                         mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.music_game);
@@ -234,9 +232,16 @@ public class MenuActivity extends Activity {
                                 @Override
                                 public void onClick(View v)
                                 {
-                                    ClassicPlayActivity.restart();
+                                    flag_resume=false;
                                     Intent intent = new Intent(MenuActivity.this, ClassicPlayActivity.class);
                                     startActivity(intent);
+//                                    MenuActivity.this.finish();
+//                                    Intent intent=new Intent(MenuActivity.this,ClassicPlayActivity.class);
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//                                    startActivity(intent);
+                                    ClassicPlayActivity.restart();
+//                                    shimmerTimeTrial.cancel();
+//                                    shimmerClassicPlay.cancel();
                                     MenuActivity.this.finish();
                                     if (sharedPreferences.getBoolean("sounds",true))
                                     {
@@ -252,9 +257,13 @@ public class MenuActivity extends Activity {
                                 @Override
                                 public void onClick(View v)
                                 {
+                                    flag_resume=true;
                                     Intent intent = new Intent(MenuActivity.this, ClassicPlayActivity.class);
                                     startActivity(intent);
+//                                    shimmerTimeTrial.cancel();
+//                                    shimmerClassicPlay.cancel();
                                     MenuActivity.this.finish();
+//                                    MenuActivity.this.finish();
                                     if (sharedPreferences.getBoolean("sounds",true))
                                     {
                                         mediaPlayer=MediaPlayer.create(MenuActivity.this,R.raw.music_game);
@@ -300,8 +309,8 @@ public class MenuActivity extends Activity {
                     btnBackgroundColor.setChecked(true);
                     backgroundColor_flag=false;
                 }
-//                else
-//                    backgroundColor_flag=true;
+                else
+                    backgroundColor_flag=true;
                 dialogSetting.show();
             }
         });
@@ -335,11 +344,8 @@ public class MenuActivity extends Activity {
         });
 
         if (!sharedPreferences.getBoolean("backgroundColor",true))
-        {
-            ObjectAnimator colorFade = ObjectAnimator.ofObject(screen_color, "backgroundColor", new ArgbEvaluator(), Color.argb(255, 24, 255, 255), Color.argb(255, 69, 90, 100));
-            colorFade.setDuration(2000);
-            colorFade.start();
-        }
+            screen_color.setBackgroundColor(Color.argb(255, 69, 90, 100));
+
         btnBackgroundColor=(Switch) dialogSetting.findViewById(R.id.btnBackgroundColor);
         btnBackgroundColor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {

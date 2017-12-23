@@ -15,7 +15,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.hanks.htextview.rainbow.RainbowTextView
+        <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -28,9 +28,24 @@
             android:text="@string/highscore"
             android:textSize="40sp"
             android:textStyle="bold|italic"
-            android:fontFamily="R"
-            app:colorSpace="150dp"
-            app:colorSpeed="4dp" />
+            android:fontFamily="R" />
+
+        <!--<com.hanks.htextview.rainbow.RainbowTextView-->
+            <!--android:id="@+id/textView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="0.7"-->
+            <!--android:gravity="center"-->
+            <!--android:shadowColor="@color/TextViewShadow"-->
+            <!--android:shadowDx="20"-->
+            <!--android:shadowDy="20"-->
+            <!--android:shadowRadius="10"-->
+            <!--android:text="@string/highscore"-->
+            <!--android:textSize="40sp"-->
+            <!--android:textStyle="bold|italic"-->
+            <!--android:fontFamily="R"-->
+            <!--app:colorSpace="150dp"-->
+            <!--app:colorSpeed="4dp" />-->
 
     </LinearLayout>
 
@@ -64,8 +79,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:adjustViewBounds="true"
-                    android:scaleType="center"
-                    android:src="@mipmap/ic_timer_black_24dp" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/pish_nomayesh" />
 
                 <TextView
                     android:id="@+id/btnTimeTrial"
@@ -93,7 +108,7 @@
                         android:src="@mipmap/ic_trending_up_black_24dp"
                         app:srcCompat="@drawable/ic_trending" />
 
-                    <com.romainpiel.shimmer.ShimmerTextView
+                    <TextView
                         android:id="@+id/txtScoreBestTimeTrial"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -134,8 +149,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:adjustViewBounds="true"
-                    android:scaleType="center"
-                    android:src="@mipmap/ic_games_black_24dp" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/pish_nomayesh_1" />
 
                 <TextView
                     android:id="@+id/btnClassicPlay"
@@ -162,7 +177,7 @@
                         android:src="@mipmap/ic_trending_up_black_24dp"
                         app:srcCompat="@drawable/ic_trending" />
 
-                    <com.romainpiel.shimmer.ShimmerTextView
+                    <TextView
                         android:id="@+id/txtScoreBestClassicPlay"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
