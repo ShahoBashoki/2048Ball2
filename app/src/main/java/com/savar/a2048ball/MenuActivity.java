@@ -26,6 +26,8 @@ import android.widget.Toast;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 
+import ir.myteam.adsdk.AdCommon;
+
 public class MenuActivity extends Activity {
     public static TextView txtScoreBestTimeTrial;
     public static TextView txtScoreBestClassicPlay;
@@ -80,6 +82,8 @@ public class MenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        AdCommon.init(this, "NBCsupeNzC",false,true);
 
         screen_color= (LinearLayout) findViewById(R.id.screen_color);
 
